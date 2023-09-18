@@ -26,7 +26,7 @@ const Container = ({ title }) => {
       task: newTask,
       description: newDescription,
       label: newLabel,
-      isEditing: true
+      isEditing: false
     };
     // Add the new card to the list of cards
     setCards([...cards, newCard]);
@@ -55,6 +55,8 @@ const Container = ({ title }) => {
     setCards(updatedCards);
   };
 
+  
+
   return (
     <Fragment>
       <Box borderRadius="5px" bgColor="gray.300">
@@ -67,7 +69,7 @@ const Container = ({ title }) => {
 
           <Box>
             <Text color="#000" fontSize={{ base: "16px" }} fontWeight={400}>
-              01/20
+            02/10
             </Text>
           </Box>
         </Flex>

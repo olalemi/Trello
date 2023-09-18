@@ -1,5 +1,5 @@
 import React from "react";
-import { Box, Flex, Text, Button } from "@chakra-ui/react";
+import { Box, Flex, Text } from "@chakra-ui/react";
 const Card = ({ task, description,label }) => {
   return (
     <Box borderRadius="5px" bgColor="gray.400" p={3}>
