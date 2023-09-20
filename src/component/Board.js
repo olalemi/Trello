@@ -1,13 +1,25 @@
-import React, { Fragment, useState } from "react";
+import React, { Fragment, useState, useEffect } from "react";
 import { Box, Text, Flex } from "@chakra-ui/react";
 import Container from "./Container";
+import { getTasks } from "../api/BoardService";
+
 
 import { useDrop } from "react-dnd";
 const Board = () => {
   const [cards, setCards] = useState([]);
+
+  useEffect(() => {
+    async function  getAllTasks(){
+      const allTasks = await getTasks()
+      console.log(allTasks,"all my cards");
+      setCards(allTasks.data)
+    }
+    getAllTasks()
+  
+  },[])
   
 
-  const [ dropRef] = useDrop({
+  const [ {isOver} ,dropRef] = useDrop({
     accept: "CARD",
     drop: (item,monitor) => {
       console.log(monitor.getItem(),"monitored");
