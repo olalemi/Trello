@@ -14,7 +14,9 @@ Create a kanban board like trello/JIRA where users can add, delete and update ta
 
 ### Created all endpoints fro crud operations
 
-### Implemented get all cards
+### Implemented getall cards from the Api
+
+### Mobile responsiveness
 
 ### created the simple and paper sketch
 

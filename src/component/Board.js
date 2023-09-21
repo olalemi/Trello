@@ -52,7 +52,14 @@ const Board = () => {
           </Text>
         </Box>
 
-        <Flex mt="50px" justifyContent="center" ref={dropRef} gap={2}>
+        <Flex
+          mt="50px"
+          direction={{ base: "column", md: "row" }}
+          justifyContent="center"
+          ref={dropRef}
+          gap={4}
+          p={10}
+        >
           <Container
             title={"To do"}
             allCards={cards}
