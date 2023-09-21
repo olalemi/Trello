@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useState } from "react";
+import React, { Fragment, useState } from "react";
 import { Box, Flex, Text, Button, Textarea } from "@chakra-ui/react";
 import DraggableCard from "./DraggableCard";
 
@@ -8,17 +8,6 @@ const Container = ({ title, cards, setCards, status, allCards }) => {
   const [newDescription, setNewDescription] = useState("");
   const [newLabel, setNewlabel] = useState("");
   const [newStatus, setNewStatus] = useState(status);
-
-  // const {
-  //   isLoading,
-  //   error,
-  //   data: pages,
-  //   refetch: refectTitles,
-  // } = useQuery<IPages>("getPages", async () => PagesService.getPages());
-
-
-
-
 
   const handleAddCardClick = () => {
     setIsAddingCard(true);
@@ -56,10 +45,12 @@ const Container = ({ title, cards, setCards, status, allCards }) => {
   };
 
   const handleCardDelete = (index) => {
-    const cardToDelete = allCards.find(c => c.task === allCards[index].task )
+    const cardToDelete = allCards.find((c) => c.task === allCards[index].task);
     // const updatedCards = [...allCards];
-    console.log(cardToDelete,"delete");
-    const updatedCards = allCards.filter(allCard => allCard.task !== cardToDelete.task);
+    console.log(cardToDelete, "delete");
+    const updatedCards = allCards.filter(
+      (allCard) => allCard.task !== cardToDelete.task
+    );
     // updatedCards.splice(index, 1);
     setCards(updatedCards);
   };
