@@ -1,6 +1,7 @@
 import React, { Fragment, useState } from "react";
 import { Box, Flex, Text, Button, Textarea } from "@chakra-ui/react";
 import DraggableCard from "./DraggableCard";
+// import { BoardService } from "api/BoardService";
 
 const Container = ({ title, cards, setCards, status, allCards }) => {
   const [isAddingCard, setIsAddingCard] = useState(false);
@@ -26,7 +27,7 @@ const Container = ({ title, cards, setCards, status, allCards }) => {
       task: newTask,
       description: newDescription,
       label: newLabel,
-      status: status,
+      status: newStatus,
       isEditing: false
     };
 
@@ -46,12 +47,9 @@ const Container = ({ title, cards, setCards, status, allCards }) => {
 
   const handleCardDelete = (index) => {
     const cardToDelete = allCards.find((c) => c.task === allCards[index].task);
-    // const updatedCards = [...allCards];
-    console.log(cardToDelete, "delete");
     const updatedCards = allCards.filter(
       (allCard) => allCard.task !== cardToDelete.task
     );
-    // updatedCards.splice(index, 1);
     setCards(updatedCards);
   };
 

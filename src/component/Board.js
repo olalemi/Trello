@@ -11,7 +11,6 @@ const Board = () => {
     async function getAllTasks() {
       try {
         const response = await getTasks();
-        console.log(response.data.taskName, "all my cards");
         setCards(response.data);
       } catch (error) {
         console.error("Error fetching tasks:", error);
@@ -23,21 +22,17 @@ const Board = () => {
   const [, dropRef] = useDrop({
     accept: "CARD",
     drop: (item, monitor) => {
-      console.log(monitor.getItem(), "monitored");
       const updatedCard = { ...cards[item.index], status: "COMPLETED" };
-      console.log(updatedCard, "updated card");
 
       const oldCards = cards.filter(
         (card) => card.task !== cards[item.index].task
       );
-      console.log(oldCards, "old card");
       setCards([...oldCards, updatedCard]);
     },
     collect: (monitor) => ({
       isOver: monitor.isOver()
     })
   });
-  console.log(cards);
 
   const todoCards = cards.filter((card) => card.status === "TODO");
   const inProgressCards = cards.filter((card) => card.status === "INPROGRESS");
