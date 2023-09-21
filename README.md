@@ -11,3 +11,21 @@ Create a kanban board like trello/JIRA where users can add, delete and update ta
 ### Create a simple and neat frontend in ReactJS
 ### Sync up the data with the frontend
 
+
+
+## Completed Task
+
+### Created all endpoints fro crud operations
+### Implemented get all cards
+### created the simple and paper sketch
+### created Db with Node and Frontend With React.Js
+
+
+## uncompleted tasks
+
+### Code has bugs with delete operation
+### Code has bugs with delete operation
+
+
+
+
