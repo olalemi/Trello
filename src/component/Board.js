@@ -22,7 +22,7 @@ const Board = () => {
   const [, dropRef] = useDrop({
     accept: "CARD",
     drop: (item, monitor) => {
-      const updatedCard = { ...cards[item.index], status: "COMPLETED" };
+      const updatedCard = { ...cards[item.index], status: "INPROGRESS" };
 
       const oldCards = cards.filter(
         (card) => card.task !== cards[item.index].task
