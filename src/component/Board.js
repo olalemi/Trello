@@ -9,14 +9,18 @@ const Board = () => {
 
   useEffect(() => {
     async function getAllTasks() {
-      const allTasks = await getTasks();
-      console.log(allTasks, "all my cards");
-      setCards(allTasks.data);
+      try {
+        const response = await getTasks();
+        console.log(response.data.taskName, "all my cards");
+        setCards(response.data);
+      } catch (error) {
+        console.error("Error fetching tasks:", error);
+      }
     }
     getAllTasks();
   }, []);
 
-  const [{ isOver }, dropRef] = useDrop({
+  const [, dropRef] = useDrop({
     accept: "CARD",
     drop: (item, monitor) => {
       console.log(monitor.getItem(), "monitored");
