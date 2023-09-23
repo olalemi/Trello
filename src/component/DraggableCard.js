@@ -23,9 +23,9 @@ const DraggableCard = ({ card, index }) => {
       }}
     >
       <Card
-        task={card.task}
+        task={card.title}
         description={card.description}
-        label={card.label}
+        label={card.eta}
         status={card.status}
       />
     </Box>

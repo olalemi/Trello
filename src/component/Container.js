@@ -1,63 +1,48 @@
 import React, { Fragment, useState } from "react";
 import { Box, Flex, Text, Button, Textarea } from "@chakra-ui/react";
 import DraggableCard from "./DraggableCard";
-// import { BoardService } from "api/BoardService";
 
-const Container = ({ title, cards, setCards, status }) => {
-  const [isAddingCard, setIsAddingCard] = useState(false);
-  const [newTask, setNewTask] = useState("");
-  const [newDescription, setNewDescription] = useState("");
-  const [newLabel, setNewlabel] = useState("");
-  const [newStatus, setNewStatus] = useState(status);
+import { createTask, deleteTask } from "../api/BoardService";
 
+const Container = ({ title, cards, setCards, status, allCards }) => {
+  const initialState = {
+    isAddingCard: false,
+    isEditingCard: false,
+    newTask: "",
+    newDescription: "",
+    newLabel: "",
+    newStatus: status
+  };
 
+  const [state, setState] = useState(initialState);
   const handleAddCardClick = () => {
-    setIsAddingCard(true);
+    setState({ ...state, isAddingCard: true });
   };
 
   const handleCancelClick = () => {
-    setIsAddingCard(false);
-    setNewTask("");
-    setNewDescription("");
-    setNewlabel("");
-    setNewStatus("");
+    setState(initialState);
+    // setNewStatus("");
   };
 
-  const handleSaveClick = () => {
-    const newCard = {
-      task: newTask,
-      description: newDescription,
-      label: newLabel,
-      status: newStatus,
-      isEditing: false
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const reqBody = {
+      title: state.newTask,
+      eta: state.newLabel,
+      description: state.newDescription,
+      status: state.newStatus
     };
-
-    setCards([...cards, newCard]);
-    setNewTask("");
-    setNewDescription("");
-    setNewlabel("");
-    setNewStatus("");
-    setIsAddingCard(false);
+    const res = await createTask(reqBody);
+    if (res.msg.startsWith("success")) {
+      setState(initialState);
+    }
   };
 
-  const handleCardClick = (index) => {
-    const updatedCards = [...cards];
-    updatedCards[index].isEditing = true;
-    setCards(updatedCards);
-  };
-
-  const handleCardDelete = (index) => {
-    const cardToDelete = cards.find((c) => c.task === cards[index].task);
-    const updatedCards = cards.filter(
-      (allCard) => allCard.task !== cardToDelete.task
-    );
-    setCards(updatedCards);
-  };
-
-  const handleInputBlur = (index) => {
-    const updatedCards = [...cards];
-    updatedCards[index].isEditing = false;
-    setCards(updatedCards);
+  const handleDelete = async (id) => {
+    const res = await deleteTask(id);
+    console.log(res);
+    if (res === 200) {
+    }
   };
 
   return (
@@ -77,135 +62,152 @@ const Container = ({ title, cards, setCards, status }) => {
           </Box>
         </Flex>
 
-        {cards.map((card, index) => (
-          <Box key={index} p={2}>
-            {card.isEditing ? (
+        {cards.map((card) => {
+          const { title, description, eta, _id } = card;
+
+          return (
+            <Box key={_id} p={2}>
+              <Flex direction="column" gap={2}>
+                {!initialState.isEditingCard ? (
+                  <Box>
+                    <Flex justifyContent="flex-end">
+                      <Box>
+                        <Button
+                          style={{
+                            background: "transparent",
+                            border: "none",
+                            outline: "none",
+                            cursor: "pointer",
+                            fontSize: "10px",
+                            fontWeight: 700,
+                            marginRight: "-10px",
+                            color: "#000"
+                          }}
+                          onClick={() => handleDelete(_id)}
+                        >
+                          x
+                        </Button>
+                      </Box>
+                    </Flex>
+
+                    <Box marginTop="-30px">
+                      <DraggableCard key={_id} card={card} />
+                    </Box>
+                  </Box>
+                ) : (
+                  <Box key={_id} p={2}>
+                    <Flex direction="column" gap={2}>
+                      <Flex gap={2}>
+                        <Box>
+                          <Textarea
+                            placeholder="Title"
+                            value={title}
+                            maxW="145px"
+                            onChange={(e) => {
+                              // setCards(updatedCards);
+                            }}
+                            // onBlur={() => handleInputBlur(_id)}
+                            style={{ overflowWrap: "break-word" }}
+                            rows={1}
+                          />
+                        </Box>
+                        <Box>
+                          <Textarea
+                            placeholder="Completion Time"
+                            value={eta}
+                            onChange={(e) => {
+                              // setCards(updatedCards);
+                            }}
+                            // onBlur={() => handleInputBlur(_id)}
+                            maxW="145px"
+                            style={{ overflowWrap: "break-word" }}
+                            rows={1}
+                          />
+                        </Box>
+                      </Flex>
+                      <Box>
+                        <Textarea
+                          placeholder="Description"
+                          value={description}
+                          maxW="300px"
+                          onChange={(e) => {
+                            // setCards(updatedCards);
+                          }}
+                          // onBlur={() => handleInputBlur(_id)}
+                          style={{ overflowWrap: "break-word" }}
+                          rows={1}
+                        />
+                      </Box>
+                    </Flex>
+                  </Box>
+                )}
+              </Flex>
+            </Box>
+          );
+        })}
+
+        {state.isAddingCard ? (
+          <Flex direction="column" gap={2} p={2}>
+            <form mb={2} onSubmit={handleSubmit}>
               <Flex direction="column" gap={2}>
                 <Flex gap={2}>
-                  <Box>
-                    <Textarea
-                      placeholder="Task"
-                      value={card.title}
-                      maxW="145px"
-                      onChange={(e) => {
-                        const updatedCards = [...cards];
-                        updatedCards[index].task = e.target.value;
-                        setCards(updatedCards);
-                      }}
-                      onBlur={() => handleInputBlur(index)}
-                      style={{ overflowWrap: "break-word" }}
-                      rows={1}
-                    />
-                  </Box>
-                  <Box>
-                    <Textarea
-                      placeholder="Completion time"
-                      value={card.eta}
-                      onChange={(e) => {
-                        const updatedCards = [...cards];
-                        updatedCards[index].label = e.target.value;
-                        setCards(updatedCards);
-                      }}
-                      onBlur={() => handleInputBlur(index)}
-                      maxW="145px"
-                      style={{ overflowWrap: "break-word" }}
-                      rows={1}
-                    />
-                  </Box>
+                  <Textarea
+                    placeholder="Title"
+                    fontSize="12px"
+                    value={state.newTask}
+                    onChange={(e) =>
+                      setState({ ...state, newTask: e.target.value })
+                    }
+                    maxW="145px"
+                    style={{ overflowWrap: "break-word" }}
+                    rows={1}
+                    required
+                  />
+
+                  <Textarea
+                    placeholder="Completion Time"
+                    fontSize="12px"
+                    // value={newLabel}
+                    onChange={(e) =>
+                      setState({ ...state, newLabel: e.target.value })
+                    }
+                    maxW="145px"
+                    style={{ overflowWrap: "break-word" }}
+                    rows={1}
+                    required
+                  />
                 </Flex>
 
                 <Box>
                   <Textarea
                     placeholder="Description"
-                    value={card.description}
-
+                    fontSize="12px"
+                    // value={newDescription}
+                    onChange={(e) =>
+                      setState({ ...state, newDescription: e.target.value })
+                    }
                     maxW="300px"
-                    onChange={(e) => {
-                      const updatedCards = [...cards];
-                      updatedCards[index].description = e.target.value;
-                      setCards(updatedCards);
-                    }}
-                    onBlur={() => handleInputBlur(index)}
                     style={{ overflowWrap: "break-word" }}
                     rows={1}
+                    required
                   />
                 </Box>
               </Flex>
-            ) : (
-              <Box>
-                <Flex justifyContent="flex-end">
-                  <Box>
-                    <Button
-                      style={{
-                        background: "transparent",
-                        border: "none",
-                        outline: "none",
-                        cursor: "pointer",
-                        fontSize: "10px",
-                        fontWeight: 700,
-                        marginRight: "-10px",
-                        color: "#000"
-                      }}
-                      onClick={() => handleCardDelete(index)}
-                    >
-                      x
-                    </Button>
-                  </Box>
-                </Flex>
-                <Box marginTop="-30px" onClick={() => handleCardClick(index)}>
-                  <DraggableCard key={index} card={card} index={index} />
+              <Flex direction="column" gap={2} mt={2}>
+                <Box>
+                  <Button
+                    bgColor="#5aac44"
+                    color="#fff"
+                    // onClick={handleSaveClick}
+                    marginRight={2}
+                    type="submit"
+                  >
+                    Add Card
+                  </Button>
+                  <Button onClick={handleCancelClick}>Cancel</Button>
                 </Box>
-              </Box>
-            )}
-          </Box>
-        ))}
-
-        {isAddingCard ? (
-          <Flex direction="column" gap={2} p={2}>
-            <Flex direction="row" gap={2}>
-              <Box>
-                <Textarea
-                  placeholder="Task"
-                  value={newTask}
-                  onChange={(e) => setNewTask(e.target.value)}
-                  maxW="145px"
-                  style={{ overflowWrap: "break-word" }}
-                  rows={1}
-                />
-              </Box>
-
-              <Box>
-                <Textarea
-                  placeholder="Label"
-                  value={newLabel}
-                  onChange={(e) => setNewlabel(e.target.value)}
-                  maxW="145px"
-                  style={{ overflowWrap: "break-word" }}
-                  rows={1}
-                />
-              </Box>
-            </Flex>
-            <Box>
-              <Textarea
-                placeholder="Description"
-                value={newDescription}
-                onChange={(e) => setNewDescription(e.target.value)}
-                maxW="300px"
-                style={{ overflowWrap: "break-word" }}
-                rows={1}
-              />
-            </Box>
-            <Box>
-              <Button
-                bgColor="#5aac44"
-                color="#fff"
-                onClick={handleSaveClick}
-                marginRight={2}
-              >
-                Add Card
-              </Button>
-              <Button onClick={handleCancelClick}>Cancel</Button>
-            </Box>
+              </Flex>
+            </form>
           </Flex>
         ) : (
           <Box p={3}>
