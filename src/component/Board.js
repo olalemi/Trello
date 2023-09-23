@@ -6,11 +6,13 @@ import { getTasks } from "../api/BoardService";
 import { useDrop } from "react-dnd";
 const Board = () => {
   const [cards, setCards] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     async function getAllTasks() {
       try {
         const response = await getTasks();
+        setIsLoading(false)
         setCards(response.data);
       } catch (error) {
         console.error("Error fetching tasks:", error);
@@ -34,9 +36,12 @@ const Board = () => {
     })
   });
 
-  const todoCards = cards.filter((card) => card.status === "TODO");
-  const inProgressCards = cards.filter((card) => card.status === "INPROGRESS");
-  const doneCards = cards.filter((card) => card.status === "COMPLETED");
+  const todoCards =
+    !isLoading && cards.filter((card) => card.status === "TODO");
+  const inProgressCards =
+    !isLoading && cards.filter((card) => card.status === "INPROGRESS");
+  const doneCards =
+    !isLoading && cards.filter((card) => card.status === "COMPLETED");
 
   return (
     <Fragment>
@@ -62,21 +67,18 @@ const Board = () => {
         >
           <Container
             title={"To do"}
-            allCards={cards}
             status={"TODO"}
             cards={todoCards}
             setCards={setCards}
           />
           <Container
             title={"In Progress"}
-            allCards={cards}
             status={"INPROGRESS"}
             cards={inProgressCards}
             setCards={setCards}
           />
           <Container
             status={"COMPLETED"}
-            allCards={cards}
             title={"Completed"}
             cards={doneCards}
             setCards={setCards}

@@ -3,12 +3,13 @@ import { Box, Flex, Text, Button, Textarea } from "@chakra-ui/react";
 import DraggableCard from "./DraggableCard";
 // import { BoardService } from "api/BoardService";
 
-const Container = ({ title, cards, setCards, status, allCards }) => {
+const Container = ({ title, cards, setCards, status }) => {
   const [isAddingCard, setIsAddingCard] = useState(false);
   const [newTask, setNewTask] = useState("");
   const [newDescription, setNewDescription] = useState("");
   const [newLabel, setNewlabel] = useState("");
   const [newStatus, setNewStatus] = useState(status);
+
 
   const handleAddCardClick = () => {
     setIsAddingCard(true);
@@ -31,7 +32,7 @@ const Container = ({ title, cards, setCards, status, allCards }) => {
       isEditing: false
     };
 
-    setCards([...allCards, newCard]);
+    setCards([...cards, newCard]);
     setNewTask("");
     setNewDescription("");
     setNewlabel("");
@@ -46,8 +47,8 @@ const Container = ({ title, cards, setCards, status, allCards }) => {
   };
 
   const handleCardDelete = (index) => {
-    const cardToDelete = allCards.find((c) => c.task === allCards[index].task);
-    const updatedCards = allCards.filter(
+    const cardToDelete = cards.find((c) => c.task === cards[index].task);
+    const updatedCards = cards.filter(
       (allCard) => allCard.task !== cardToDelete.task
     );
     setCards(updatedCards);
@@ -84,7 +85,7 @@ const Container = ({ title, cards, setCards, status, allCards }) => {
                   <Box>
                     <Textarea
                       placeholder="Task"
-                      value={card.task}
+                      value={card.title}
                       maxW="145px"
                       onChange={(e) => {
                         const updatedCards = [...cards];
@@ -98,8 +99,8 @@ const Container = ({ title, cards, setCards, status, allCards }) => {
                   </Box>
                   <Box>
                     <Textarea
-                      placeholder="Label"
-                      value={card.label}
+                      placeholder="Completion time"
+                      value={card.eta}
                       onChange={(e) => {
                         const updatedCards = [...cards];
                         updatedCards[index].label = e.target.value;
@@ -117,6 +118,7 @@ const Container = ({ title, cards, setCards, status, allCards }) => {
                   <Textarea
                     placeholder="Description"
                     value={card.description}
+
                     maxW="300px"
                     onChange={(e) => {
                       const updatedCards = [...cards];
