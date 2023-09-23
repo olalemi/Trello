@@ -46,6 +46,7 @@ const Board = () => {
             textAlign="center"
             fontSize={{ base: "24px", md: "40px" }}
             fontWeight={700}
+            p={10}
           >
             Trello Board
           </Text>
